@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import API from "../api"; // axios instance
+import API from "../api";
 import "./Signup.css";
 
 function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState(""); // start empty
+  const [role, setRole] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSignup = async (e) => {
@@ -19,16 +19,17 @@ function Signup() {
 
     try {
       setLoading(true);
-      // ✅ Fixed endpoint — no extra /api
+
+      // ✅ Correct endpoint (no /api prefix needed)
       await API.post("/auth/signup", { name, email, password, role });
 
       alert("✅ Signup successful! Please login.");
       window.location.href = "/login";
     } catch (err) {
-      console.error("Signup Error:", err);
+      console.error("❌ Signup Error:", err);
       const msg =
         err.response?.data?.message ||
-        "❌ Signup failed. Please check your details and try again.";
+        "Signup failed. Please check your details and try again.";
       alert(msg);
     } finally {
       setLoading(false);
@@ -38,7 +39,7 @@ function Signup() {
   return (
     <div className="auth-container">
       <div className="auth-box">
-        <h2 className="auth-title">Signup</h2>
+        <h2 className="auth-title">Create an Account</h2>
 
         <form onSubmit={handleSignup}>
           <input
