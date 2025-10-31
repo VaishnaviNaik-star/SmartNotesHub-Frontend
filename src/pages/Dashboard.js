@@ -43,7 +43,8 @@ function Dashboard() {
             <div key={note._id} className="note-card">
               <h3>{note.title}</h3>
               <p><strong>Description:</strong> {note.description}</p>
-              <p><strong>Date:</strong> {new Date(note.createdAt).toLocaleDateString()}</p>
+           <p><strong>Date:</strong> {note.uploadDate ? new Date(note.uploadDate).toLocaleDateString() : "—"}</p>
+
               <a href={note.fileUrl} target="_blank" rel="noopener noreferrer" className="download-btn">
                 📥 Download
               </a>
@@ -56,3 +57,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
