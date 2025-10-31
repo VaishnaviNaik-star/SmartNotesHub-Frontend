@@ -1,0 +1,101 @@
+.dashboard-container {
+  padding: 20px;
+  color: var(--text-color, #f0f0f0);
+  background-color: var(--bg-color, #121212);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+.dashboard-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.dashboard-header button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.dashboard-header button:hover {
+  background: #0056b3;
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.note-card {
+  background: var(--card-bg, #1f1f1f);
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.note-card h3 {
+  color: #4da6ff;
+  margin-bottom: 10px;
+}
+
+.note-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.download-btn {
+  display: inline-block;
+  margin-top: 10px;
+  background: #4da6ff;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.download-btn:hover {
+  background: #007bff;
+}
+
+/* Light theme overrides */
+body.light-mode .dashboard-container {
+  background-color: #f5f5f5;
+  color: #1a1a1a;
+}
+
+body.light-mode .note-card {
+  background: #ffffff;
+  color: #000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .download-btn {
+  background: #007bff;
+}
+
+body.light-mode .download-btn:hover {
+  background: #0056b3;
+}
