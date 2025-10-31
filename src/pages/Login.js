@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import API from "../api"; // axios instance with baseURL
+import API from "../api"; // axios instance with correct baseURL
 import "./Login.css";
 
 function Login() {
@@ -9,22 +9,21 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      setLoading(true);
-
-      // ✅ FIXED: Correct endpoint (no /api prefix needed)
+      // ✅ Use correct endpoint for your backend
       const res = await API.post("/auth/login", { email, password });
 
-      // Save token and user data
+      // Save token and user details
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       alert(`✅ Welcome ${res.data.user?.name || "User"}!`);
       window.location.href = "/notes";
     } catch (err) {
-      console.error("Login error:", err);
-      alert(err.response?.data?.message || "❌ Login failed. Please check your credentials.");
+      console.error("❌ Login Error:", err);
+      alert(err.response?.data?.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -60,7 +59,9 @@ function Login() {
 
         <p className="login-footer">
           Don’t have an account?{" "}
-          <a href="/signup" className="signup-link">Sign up</a>
+          <a href="/signup" className="signup-link">
+            Sign up
+          </a>
         </p>
       </div>
     </div>
