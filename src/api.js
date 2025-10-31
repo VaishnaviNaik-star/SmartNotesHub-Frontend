@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://smartnoteshub-backend.onrender.com/api", // ✅ your deployed backend
+  baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api",
 });
 
-// Attach token automatically (for authorized routes)
+// Attach token automatically
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
