@@ -22,10 +22,5 @@ API.interceptors.request.use((config) => {
 
 export default API;
 
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
 
-export default API;
-
-
+                             
