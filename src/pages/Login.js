@@ -1,29 +1,27 @@
 import React, { useState } from "react";
-import API from "../api"; // axios instance with correct baseURL
+import API from "../api";
 import "./Login.css";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
     try {
-      // ✅ Use correct endpoint for your backend
-      const res = await API.post("/auth/login", { email, password });
+      setLoading(true);
+      const res = await API.post("/api/auth/login", { email, password });
 
-      // Save token and user details
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       alert(`✅ Welcome ${res.data.user?.name || "User"}!`);
       window.location.href = "/notes";
     } catch (err) {
-      console.error("❌ Login Error:", err);
-      alert(err.response?.data?.message || "Login failed. Please try again.");
+      console.error("Login error:", err);
+      alert(err.response?.data?.message || "❌ Login failed. Please check credentials.");
     } finally {
       setLoading(false);
     }
@@ -33,24 +31,32 @@ function Login() {
     <div className="login-container">
       <div className="login-box">
         <h2 className="login-title">Login</h2>
-
         <form onSubmit={handleLogin}>
           <input
             type="email"
             className="login-input"
-            value={email}
             placeholder="Enter Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <input
-            type="password"
-            className="login-input"
-            value={password}
-            placeholder="Enter Password"
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+
+          <div className="password-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="login-input"
+              placeholder="Enter Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <span
+              className="eye-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </span>
+          </div>
 
           <button type="submit" className="login-btn" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
@@ -58,10 +64,7 @@ function Login() {
         </form>
 
         <p className="login-footer">
-          Don’t have an account?{" "}
-          <a href="/signup" className="signup-link">
-            Sign up
-          </a>
+          Don’t have an account? <a href="/signup">Sign up</a>
         </p>
       </div>
     </div>
