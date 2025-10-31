@@ -1,14 +1,14 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://smartnoteshub-backend.onrender.com/api",
+  baseURL: "https://smartnoteshub-backend.onrender.com/api", // ✅ your deployed backend
 });
 
-API.interceptors.request.use((req) => {
+// Attach token automatically (for authorized routes)
+API.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-  if (token) req.headers.Authorization = `Bearer ${token}`;
-  return req;
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
 });
 
 export default API;
-
