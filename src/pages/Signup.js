@@ -21,7 +21,7 @@ function Signup() {
       setLoading(true);
 
       // ✅ Correct endpoint (no /api prefix needed)
-      await API.post("/auth/signup", { name, email, password, role });
+     await API.post("/api/auth/signup", { name, email, password, role });
 
       alert("✅ Signup successful! Please login.");
       window.location.href = "/login";
@@ -92,3 +92,4 @@ function Signup() {
 }
 
 export default Signup;
+
