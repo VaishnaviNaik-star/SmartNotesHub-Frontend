@@ -1,0 +1,167 @@
+.notes-container {
+  padding: 20px;
+  min-height: 100vh;
+  background: #1f1f1f;
+  color: #f0f0f0;
+  font-family: "Segoe UI", sans-serif;
+  transition: background 0.4s, color 0.4s;
+}
+
+/* 🔆 Light Mode Support */
+body.light-mode .notes-container {
+  background: #f9fafb;
+  color: #1f1f1f;
+}
+
+/* 📘 Each Note Card */
+.note-card {
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: #2b2b2b;
+}
+
+/* 🌞 Light Mode for Note Cards */
+body.light-mode .note-card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+}
+
+.note-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.note-card h3 {
+  color: #3b82f6;
+  margin-bottom: 8px;
+}
+
+.note-card p {
+  color: #d1d5db;
+}
+
+.note-card small {
+  color: #aaa;
+}
+
+/* 🩶 Light Mode Text Colors */
+body.light-mode .note-card h3 {
+  color: #1d4ed8;
+}
+body.light-mode .note-card p,
+body.light-mode .note-card small {
+  color: #222;
+}
+
+/* 🔍 Search Input */
+.search-input {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #3b82f6;
+  background: #2b2b2b;
+  color: #f0f0f0;
+  flex: 1;
+  min-width: 220px;
+  transition: background 0.3s;
+}
+body.light-mode .search-input {
+  background: #ffffff;
+  color: #1f1f1f;
+}
+
+/* 🧭 Sort + View + Theme Buttons */
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sort-select,
+.view-toggle,
+.theme-toggle {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+/* Dropdown */
+.sort-select {
+  background: #2b2b2b;
+  color: #f0f0f0;
+  border: 1px solid #3b82f6;
+}
+body.light-mode .sort-select {
+  background: #fff;
+  color: #111;
+}
+
+/* Buttons */
+.view-toggle {
+  background: #2563eb;
+  color: white;
+}
+.view-toggle:hover {
+  background: #1d4ed8;
+}
+.theme-toggle {
+  background: #facc15;
+  color: #000;
+}
+.theme-toggle:hover {
+  background: #eab308;
+}
+
+/* 📥 Download Button */
+.download-btn {
+  text-decoration: none;
+  background-color: #3b82f6;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  display: inline-block;
+  transition: background 0.3s;
+}
+.download-btn:hover {
+  background-color: #2563eb;
+}
+
+/* 📱 Responsive Layout */
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.notes-grid {
+  display: grid;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .notes-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls {
+    justify-content: space-between;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .note-card {
+    padding: 12px;
+  }
+}
