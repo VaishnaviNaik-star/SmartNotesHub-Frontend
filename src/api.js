@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL:
-    process.env.REACT_APP_API_BASE_URL ||
+  
     "https://smartnoteshub-backend.onrender.com/api", // ✅ Render backend
 });
 
@@ -14,3 +14,4 @@ API.interceptors.request.use((config) => {
 });
 
 export default API;
+
