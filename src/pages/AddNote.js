@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../api"; // ✅ Use your axios instance instead of axios directly
 import "./AddNote.css";
 
 function AddNote() {
@@ -11,7 +11,7 @@ function AddNote() {
   const user = JSON.parse(localStorage.getItem("user"));
   const UPLOADCARE_PUBLIC_KEY = "053b6a5e176a5da0e6ea";
 
-  // Upload to Uploadcare and store permanently
+  // ✅ Upload to Uploadcare and get CDN link
   const uploadToUploadcare = async (file) => {
     const formData = new FormData();
     formData.append("UPLOADCARE_PUB_KEY", UPLOADCARE_PUBLIC_KEY);
@@ -26,10 +26,10 @@ function AddNote() {
     const data = await res.json();
     if (!data.file) throw new Error("File upload failed");
 
-    // Return permanent CDN URL
     return `https://ucarecdn.com/${data.file}/`;
   };
 
+  // ✅ Submit note to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) return alert("Please select a file first");
@@ -38,7 +38,7 @@ function AddNote() {
       setUploading(true);
       const fileUrl = await uploadToUploadcare(file);
 
-      await axios.post("https://smartnoteshub-backend.onrender.com/api/notes", {
+      await API.post("/notes", {
         title,
         subject,
         fileUrl,
@@ -53,8 +53,8 @@ function AddNote() {
       setFile(null);
       window.location.href = "/notes";
     } catch (err) {
-      console.error(err);
-      alert("❌ Upload failed");
+      console.error("❌ Upload failed:", err);
+      alert("❌ Upload failed. Please try again.");
     } finally {
       setUploading(false);
     }
