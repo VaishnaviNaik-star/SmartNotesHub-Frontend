@@ -9,12 +9,14 @@ function AddNote() {
   const [uploading, setUploading] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const UPLOADCARE_PUBLIC_KEY = "053b6a5e176a5da0e6ea"; 
+  const token = localStorage.getItem("token");
+  const UPLOADCARE_PUBLIC_KEY = "053b6a5e176a5da0e6ea";
 
-  // Upload to Uploadcare first
+  // ✅ Upload file to Uploadcare (permanent)
   const uploadToUploadcare = async (file) => {
     const formData = new FormData();
     formData.append("UPLOADCARE_PUB_KEY", UPLOADCARE_PUBLIC_KEY);
+    formData.append("UPLOADCARE_STORE", "1"); // permanent storage
     formData.append("file", file);
 
     const res = await fetch("https://upload.uploadcare.com/base/", {
@@ -23,42 +25,43 @@ function AddNote() {
     });
 
     const data = await res.json();
-    if (!data.file) throw new Error("File upload failed");
-
-    return `https://ucarecdn.com/${data.file}/`; // ✅ direct CDN link
+    if (!data.file) throw new Error("Uploadcare upload failed");
+    return `https://ucarecdn.com/${data.file}/`; // ✅ permanent public URL
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!file) {
-      alert("Please upload a file before submitting.");
-      return;
-    }
+    if (!file) return alert("Please upload a file first!");
 
     try {
       setUploading(true);
 
-      // 1️⃣ Upload file to Uploadcare
+      // Step 1: Upload file to Uploadcare
       const fileUrl = await uploadToUploadcare(file);
 
-      // 2️⃣ Send note details + file URL to backend
-      await API.post("/notes", {
-        title,
-        subject,
-        fileUrl, // 👈 we send the Uploadcare URL instead of raw file
-        uploadedBy: user?.name || "Unknown",
-        role: user?.role || "Student",
-      });
+      // Step 2: Save note data in your backend
+      await API.post(
+        "/notes",
+        {
+          title,
+          subject,
+          fileUrl,
+          uploadedBy: user?._id,
+          role: user?.role || "Student",
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-      alert("Note uploaded successfully!");
+      alert("✅ Note uploaded successfully!");
       setTitle("");
       setSubject("");
       setFile(null);
       window.location.href = "/notes";
     } catch (err) {
-      console.error(err);
-      alert(err.message || "Upload failed");
+      console.error("❌ Upload failed:", err);
+      alert("Failed to upload note: " + err.message);
     } finally {
       setUploading(false);
     }
@@ -67,6 +70,7 @@ function AddNote() {
   return (
     <div className="form-container">
       <h2>Add Note</h2>
+
       <form onSubmit={handleSubmit}>
         <input
           type="text"
