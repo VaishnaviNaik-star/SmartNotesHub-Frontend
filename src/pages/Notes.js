@@ -109,24 +109,33 @@ function Notes() {
           {filteredNotes.map((note) => (
             <div key={note._id} className="note-card">
               <h3>{note.title}</h3>
+
               {note.subject && (
                 <p>
                   <strong>Subject:</strong> {note.subject}
                 </p>
               )}
+
+              {/* ✅ Fixed Uploaded By */}
               <p>
                 <strong>Uploaded by:</strong>{" "}
-                {note.uploadedBy?.name || "Admin"}
+                {note.uploadedByName || note.uploadedBy?.name || "Admin"}
               </p>
+
+              {/* Optional: show role if exists */}
+              {note.role && (
+                <p>
+                  <strong>Role:</strong> {note.role}
+                </p>
+              )}
+
               <p>
                 <strong>Date:</strong> {formatDate(note.uploadDate)}
               </p>
 
+              {/* ✅ Fixed File URL Display */}
               <div style={{ marginTop: "10px" }}>
-                {note.fileUrl &&
-                typeof note.fileUrl === "string" &&
-                (note.fileUrl.startsWith("http") ||
-                  note.fileUrl.startsWith("/uploads")) ? (
+                {note.fileUrl && typeof note.fileUrl === "string" ? (
                   <a
                     href={note.fileUrl}
                     target="_blank"
