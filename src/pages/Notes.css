@@ -165,3 +165,10 @@ body.light-mode .sort-select {
     padding: 12px;
   }
 }
+.no-file {
+  display: inline-block;
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
