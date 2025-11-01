@@ -77,7 +77,12 @@ function Notes() {
           </select>
 
           {/* View Toggle */}
-          <button onClick={() => setViewMode(viewMode === "list" ? "grid" : "list")} className="view-toggle">
+          <button
+            onClick={() =>
+              setViewMode(viewMode === "list" ? "grid" : "list")
+            }
+            className="view-toggle"
+          >
             {viewMode === "list" ? "🔳 Grid View" : "📋 List View"}
           </button>
 
@@ -96,7 +101,9 @@ function Notes() {
           className="notes-grid"
           style={{
             gridTemplateColumns:
-              viewMode === "grid" ? "repeat(auto-fill, minmax(250px, 1fr))" : "1fr",
+              viewMode === "grid"
+                ? "repeat(auto-fill, minmax(250px, 1fr))"
+                : "1fr",
           }}
         >
           {filteredNotes.map((note) => (
@@ -108,20 +115,29 @@ function Notes() {
                 </p>
               )}
               <p>
-                <strong>Uploaded by:</strong> {note.uploadedBy || "Admin"}
+                <strong>Uploaded by:</strong>{" "}
+                {note.uploadedBy?.name || "Admin"}
               </p>
               <p>
                 <strong>Date:</strong> {formatDate(note.uploadDate)}
               </p>
+
               <div style={{ marginTop: "10px" }}>
-                <a
-                  href={note.fileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="download-btn"
-                >
-                  📥 Download
-                </a>
+                {note.fileUrl &&
+                typeof note.fileUrl === "string" &&
+                (note.fileUrl.startsWith("http") ||
+                  note.fileUrl.startsWith("/uploads")) ? (
+                  <a
+                    href={note.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="download-btn"
+                  >
+                    📥 Download
+                  </a>
+                ) : (
+                  <span className="no-file">⚠️ File not available</span>
+                )}
               </div>
             </div>
           ))}
