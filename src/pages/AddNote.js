@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import API from "../api";
+import axios from "axios";
 import "./AddNote.css";
 
 function AddNote() {
@@ -9,12 +9,13 @@ function AddNote() {
   const [uploading, setUploading] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const UPLOADCARE_PUBLIC_KEY = "053b6a5e176a5da0e6ea"; // ✅ Your real public key
+  const UPLOADCARE_PUBLIC_KEY = "053b6a5e176a5da0e6ea";
 
-  // 🔹 Step 1: Upload to Uploadcare
+  // Upload to Uploadcare and store permanently
   const uploadToUploadcare = async (file) => {
     const formData = new FormData();
     formData.append("UPLOADCARE_PUB_KEY", UPLOADCARE_PUBLIC_KEY);
+    formData.append("UPLOADCARE_STORE", "1");
     formData.append("file", file);
 
     const res = await fetch("https://upload.uploadcare.com/base/", {
@@ -25,31 +26,24 @@ function AddNote() {
     const data = await res.json();
     if (!data.file) throw new Error("File upload failed");
 
-    // 🔹 Step 2: Ask backend to make it permanent
-    const uuid = data.file;
-    await API.post("/uploadcare/store", { uuid });
-
-    // 🔹 Step 3: Return permanent file URL
-    return `https://ucarecdn.com/${uuid}/`;
+    // Return permanent CDN URL
+    return `https://ucarecdn.com/${data.file}/`;
   };
 
-  // 🔹 Step 4: Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file) {
-      alert("Please upload a file before submitting.");
-      return;
-    }
+    if (!file) return alert("Please select a file first");
 
     try {
       setUploading(true);
       const fileUrl = await uploadToUploadcare(file);
 
-      await API.post("/notes", {
+      await axios.post("https://smartnoteshub-backend.onrender.com/api/notes", {
         title,
         subject,
         fileUrl,
-        uploadedBy: user?.name || "Unknown",
+        uploadedBy: user?._id,
+        uploadedByName: user?.name,
         role: user?.role || "Student",
       });
 
@@ -59,8 +53,8 @@ function AddNote() {
       setFile(null);
       window.location.href = "/notes";
     } catch (err) {
-      console.error("Upload error:", err);
-      alert("❌ Upload failed. Try again.");
+      console.error(err);
+      alert("❌ Upload failed");
     } finally {
       setUploading(false);
     }
@@ -91,22 +85,12 @@ function AddNote() {
           accept=".pdf,.doc,.docx,.png,.jpg"
           onChange={(e) => setFile(e.target.files[0])}
           required
-          style={{
-            backgroundColor: "#374151",
-            padding: "10px",
-            borderRadius: "6px",
-            color: "#fff",
-          }}
         />
 
         <button type="submit" disabled={uploading}>
           {uploading ? "Uploading..." : "Upload Note"}
         </button>
       </form>
-
-      <p style={{ textAlign: "center", marginTop: "10px", color: "#aaa" }}>
-        Logged in as: <strong>{user?.role}</strong> — {user?.name}
-      </p>
     </div>
   );
 }
