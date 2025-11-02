@@ -49,6 +49,21 @@ function Dashboard() {
                 📥 Download
               </a>
             </div>
+       <button
+  className="delete-btn"
+  onClick={async () => {
+    if (window.confirm("Are you sure you want to delete this note?")) {
+      try {
+        await API.delete(`/notes/${note._id}`);
+        setMyNotes((prev) => prev.filter((n) => n._id !== note._id));
+      } catch (err) {
+        alert("Failed to delete note");
+      }
+    }
+  }}
+>
+  🗑️ Delete
+</button>
           ))}
         </div>
       )}
@@ -57,4 +72,5 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
 
