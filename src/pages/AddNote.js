@@ -38,35 +38,34 @@ return `https://20bnei1lnu.ucarecd.net/${data.file}/${encodedFilename}`;
 };
 
   // ✅ Submit note to backend (save metadata)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!file) return alert("Please select a file first");
+  // ✅ Submit note to backend (save metadata)
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!file) return alert("Please select a file first");
 
-    try {
-      setUploading(true);
-      const fileUrl = await uploadToUploadcare(file);
+  try {
+    setUploading(true);
+    const fileUrl = await uploadToUploadcare(file);
 
-      await API.post("/notes", {
-        title,
-        subject,
-        fileUrl,
-        uploadedBy: user?._id,
-        uploadedByName: user?.name,
-        role: user?.role || "Student",
-      });
+    // ✅ No need to send uploadedBy or uploadedByName (backend gets that from token)
+    await API.post("/notes", {
+      title,
+      description: subject, // use same field backend expects
+      fileUrl,
+    });
 
-      alert("✅ Note uploaded successfully!");
-      setTitle("");
-      setSubject("");
-      setFile(null);
-      window.location.href = "/notes";
-    } catch (err) {
-      console.error("❌ Upload failed:", err);
-      alert("❌ Upload failed. Please try again.");
-    } finally {
-      setUploading(false);
-    }
-  };
+    alert("✅ Note uploaded successfully!");
+    setTitle("");
+    setSubject("");
+    setFile(null);
+    window.location.href = "/notes";
+  } catch (err) {
+    console.error("❌ Upload failed:", err);
+    alert("❌ Upload failed. Please try again.");
+  } finally {
+    setUploading(false);
+  }
+};
 
   return (
     <div className="form-container">
@@ -104,3 +103,4 @@ return `https://20bnei1lnu.ucarecd.net/${data.file}/${encodedFilename}`;
 }
 
 export default AddNote;
+
