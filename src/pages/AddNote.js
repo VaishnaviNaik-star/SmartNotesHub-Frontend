@@ -47,10 +47,9 @@ const handleSubmit = async (e) => {
     setUploading(true);
     const fileUrl = await uploadToUploadcare(file);
 
-    // ✅ No need to send uploadedBy or uploadedByName (backend gets that from token)
     await API.post("/notes", {
       title,
-      description: subject, // use same field backend expects
+      subject, // ✅ FIXED
       fileUrl,
     });
 
@@ -103,4 +102,5 @@ const handleSubmit = async (e) => {
 }
 
 export default AddNote;
+
 
