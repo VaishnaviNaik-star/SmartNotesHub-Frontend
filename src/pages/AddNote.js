@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import API from "../api"; // ✅ Use your axios instance instead of axios directly
+import API from "../api";
 import "./AddNote.css";
 
 function AddNote() {
@@ -10,26 +10,34 @@ function AddNote() {
 
   const user = JSON.parse(localStorage.getItem("user"));
   const UPLOADCARE_PUBLIC_KEY = "053b6a5e176a5da0e6ea";
+const uploadToUploadcare = async (file) => {
+  const formData = new FormData();
+  formData.append("UPLOADCARE_PUB_KEY", UPLOADCARE_PUBLIC_KEY);
+  formData.append("UPLOADCARE_STORE", "1");
+  formData.append("file", file);
 
-  // ✅ Upload to Uploadcare and get CDN link
-  const uploadToUploadcare = async (file) => {
-    const formData = new FormData();
-    formData.append("UPLOADCARE_PUB_KEY", UPLOADCARE_PUBLIC_KEY);
-    formData.append("UPLOADCARE_STORE", "1");
-    formData.append("file", file);
+  const res = await fetch("https://upload.uploadcare.com/base/", {
+    method: "POST",
+    body: formData,
+  });
 
-    const res = await fetch("https://upload.uploadcare.com/base/", {
-      method: "POST",
-      body: formData,
-    });
+  if (!res.ok) throw new Error(`Upload failed: ${res.statusText}`);
+  const data = await res.json();
+  console.log("Uploadcare response:", data);
 
-    const data = await res.json();
-    if (!data.file) throw new Error("File upload failed");
+  if (!data.file) throw new Error("File upload failed");
 
-    return `https://ucarecdn.com/${data.file}/`;
-  };
+  // ✅ Confirm permanent storage via backend
+ await API.post("/uploadcare/store", {
+  uuid: data.file,
+  filename: file.name,
+});
+  // ✅ Return correct CDN URL
+ const encodedFilename = encodeURIComponent(file.name);
+return `https://20bnei1lnu.ucarecd.net/${data.file}/${encodedFilename}`;
+};
 
-  // ✅ Submit note to backend
+  // ✅ Submit note to backend (save metadata)
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) return alert("Please select a file first");
